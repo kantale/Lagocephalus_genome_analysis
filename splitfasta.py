@@ -1,9 +1,6 @@
 
 # coding: utf-8
 
-# In[ ]:
-
-
 #!/usr/bin/env python3 
 # Created by: Teo Danis
 # Descript: This script splits a fasta sequence into several similarly-sized pieces and creates fasta files with linear sequenses
@@ -77,7 +74,7 @@ def write():
                 if out[-1] == '/':
                     new_file = out + "file" + str(i+1) + ".fa"
                 else:
-                    new_file = new_file = out + "/file" + str(i+1) + ".fa"
+                    new_file = out + "/file" + str(i+1) + ".fa"
             
             
             new_file = "file" + str(i+1) + ".fa"
