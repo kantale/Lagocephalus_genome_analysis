@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[4]:
-
-
-get_ipython().run_line_magic('cd', 'Desktop/prots/test/')
-
-
-# In[7]:
+# created by Tdanis
 
 
 import os
