@@ -3,6 +3,12 @@
 
 # In[ ]:
 
+# Created by: Teo Danis
+# Descript: This script was used in order to keep the correrct orthogroups (for us) for the downstream analysis. It just needs the #Orthogroups.GeneCount.tsv file from Orthofinder and the Name of the column that you would like for process. For example our species is Lagocephalus #sceleratus and the column name is LSCEL.
+#  
+
+#===========================================================================================================
+
 
 
 import pandas as pd
@@ -16,7 +22,7 @@ with open('Orthogroups.GeneCount.tsv') as f:
     df = pd.read_csv('Orthogroups.GeneCount.tsv', sep = '\t')
 
 
-    new_df = df[(df[['LSCEL']] != 0).all(axis=1)] ###### keep rows !=0 for L. sceleratus column
+    new_df = df[(df[['LSCEL']] != 0).all(axis=1)] ###### keep rows !=0 for L. sceleratus column (choose your own species as it seems in headers)
     df1 = new_df[(new_df.iloc[:,1:-1] <= 1 ).all(axis=1)]   ####### keep all rows with no more than 1 gene 
 
     
