@@ -3,7 +3,7 @@
 
 # In[ ]:
 
-# create vy Tdanis
+# create by Tdanis
 
 from collections import defaultdict, Counter
 import itertools
