@@ -69,10 +69,10 @@ with open('species.txt') as sp:   #### provide a species txt tab separated
 
 df = pd.read_csv('unfiltered.txt', sep='\t')
 df
-df1 = df[(df.iloc[:,2:-1] <= 100 ).all(axis=1)] ### below 100 genes per family for every speceis
+df1 = df[(df.iloc[:,2:] <= 100 ).all(axis=1)] ### below 100 genes per family for every speceis
 df1.columns = sps
 
-df2 = df[~(df.iloc[:,2:-1] <= 100 ).all(axis=1)] ### over 100 genes for at leat one family
+df2 = df[~(df.iloc[:,2:] <= 100 ).all(axis=1)] ### over 100 genes for at leat one family
 
 with open('filtered.txt', 'wt') as txt_f:
     txt_f.write(df1.to_csv(sep='\t', index = False, header=True))
