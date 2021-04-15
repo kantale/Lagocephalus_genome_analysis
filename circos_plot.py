@@ -36,33 +36,7 @@ def count_one2one_orthologs():
                 putative_genes.append((line1[1],line1[2]))
 
         return putative_genes
-    
-final_orthologs = dict(count_one2one_orthologs()) ##### resulting dictionary, for example  ( Lscel_00013489-RA': 'TETNG16956') 
-
-
-################## creating dictionary with the coordinates for the potential subject species ######### Chromosome : (start, end)
-
-
-with open('nigro_coordinates.txt') as fasta:  ######## chromosome coordinates for T. nigroviridis retrieved from Biomart , Ensembl version 98 (Gene_Ensembl_id, chromosome, start, end)
-    
-    nigro_dict_coords = {line.strip().split()[0]:(line.strip().split()[1],line.strip().split()[2],line.strip().split()[3]) for line in fasta if line.strip().split()[1].isdigit() or  line.strip().split()[1] == 'Un_random'}
-
-
-
-
-######## 41 largest contigs which represent 91% of our genome ########
-
-    contigs = ['scaffold_101:1.0-17057981.0_pilon', 'scaffold_106:1.0-15598540.0_pilon', 'contig_127:1.0-14919945.0_pilon', 'contig_22:4.0-14575672.0_pilon', \
-               'contig_16:1.0-13974425.0_pilon', 'contig_118:1.0-13832250.0_pilon', 'contig_174:1.0-13151330.0_pilon', 'contig_533:1.0-12440543.0_pilon', 'scaffold_67:1.0-12279225.0_pilon', \
-               'contig_8:1.0-12122666.0_pilon', 'contig_91:1.0-11773260.0_pilon', 'scaffold_38:1.0-11588445.0_pilon', 'contig_90:1.0-11438290.0_pilon', 'contig_93:1.0-11311637.0_pilon', \
-               'contig_123:1.0-11274211.0_pilon', 'contig_9:1.0-11125835.0_pilon', 'contig_15:1.0-11122009.0_pilon', 'contig_427:384.0-9460825.0_pilon', 'contig_19:1.0-9019598.0_pilon', \
-               'contig_599:6529.0-8758774.0_pilon', 'contig_143:1.0-8481133.0_pilon', 'contig_2:1.0-8206783.0_pilon', 'contig_28:1.0-8182740.0_pilon', 'scaffold_125:1.0-7722920.0_pilon', \
-               'scaffold_838:1.0-6380105.0_pilon', 'contig_122:1.0-6309019.0_pilon', 'contig_94:1.0-4884195.0_pilon', 'contig_14:1.0-4861701.0_pilon', 'contig_124:1.0-4492329.0_pilon', \
-               'scaffold_115:1.0-3763395.0_pilon', 'contig_20:1.0-3597822.0_pilon', 'contig_6:1.0-3057726.0_pilon', 'contig_3:1.0-3047716.0_pilon', 'contig_4:1.0-2449395.0_pilon', \
-               'contig_153:2264884.0-4640337.0_pilon', 'contig_153:1.0-2262385.0_pilon', 'contig_200:1.0-2164460.0_pilon', 'contig_23:1.0-2122701.0_pilon', 'contig_191:1.0-1908425.0_pilon', \
-               'scaffold_1001:1.0-1813021.0_pilon', 'contig_142:1.0-1794019.0_pilon']
-
-
+   
 ##################################################33
 
 
@@ -86,53 +60,6 @@ def get_genes_for_largest_contigs():
                 contig_code.append((tpl[0], code))
         return contig_code
     
-contigs_codes_41_contigs = get_genes_for_largest_contigs()
-
-
-
-res = dict((k,v) for k,v in final_orthologs.items()) ####### dictionary with L. sceleratus and T. nigroviridis genes ({'Lscel_00013489-RA': 'TETNG16956'.....})
-
-
-
-
-# finalGenes = {}  ## nigro, lscel
-# for contig, code in contigs_codes_41_contigs:
-# #     print(contig,code)
-#     if code in res.keys():
-#         finalGenes[res[code]] = code
-
-
-finalGenes = {res[code]:code for contig, code in contigs_codes_41_contigs if code in res.keys()}  ############## inversion of res dictionary 
-        
-print(len(finalGenes)) 
-
-print(list(finalGenes.items())[:10])
-        
-ids_ensembl_nigro = {}
-
-with open('TETNG.fa') as fasta:
-    
-    for line in fasta:
-
-        line = line.strip()
-
-        if line.startswith('>'):
-
-            line = line.split('|')
-            key = line[0].replace('>', '').replace(" ", "")
-            value = line[1].replace(" ", "")
-            ids_ensembl_nigro[key] = value
-
-    
-    
-########################    pairing L. sceleratus genes with T. nigroviridis genes
-
-final_pairs_lago_ensIDS = {lago:ids_ensembl_nigro[nigro] for nigro, lago in finalGenes.items() if nigro in ids_ensembl_nigro.keys()}
-
-#################
-# print(final_pairs_lago_ensIDS)
-
-
 
 
 
@@ -157,14 +84,100 @@ def get_coordinates_orthos():
 
         return coordinates
 
-lago_dict_coords = get_coordinates_orthos()
-
-
-lago_code_contig={v:k for k,v in contigs_codes_41_contigs}
-
 
 
 ############# constructing the first part of circos input, cords and chromosomes
+
+
+
+# print(len(final_pairs_ensIDS_lago))
+# print(list(final_pairs_ensIDS_lago.items())[:10])
+# print(list(lago_dict_coords.items())[:10])
+# print(len(finalGenes))
+# print(list(finalGenes.items())[:10])
+# print(nigro_dict_coords)
+
+
+def do_all():
+    final_orthologs = dict(count_one2one_orthologs()) ##### resulting dictionary, for example  ( Lscel_00013489-RA': 'TETNG16956') 
+
+
+    ################## creating dictionary with the coordinates for the potential subject species ######### Chromosome : (start, end)
+
+
+    with open('nigro_coordinates.txt') as fasta:  ######## chromosome coordinates for T. nigroviridis retrieved from Biomart , Ensembl version 98 (Gene_Ensembl_id, chromosome, start, end)
+        
+        nigro_dict_coords = {line.strip().split()[0]:(line.strip().split()[1],line.strip().split()[2],line.strip().split()[3]) for line in fasta if line.strip().split()[1].isdigit() or  line.strip().split()[1] == 'Un_random'}
+
+
+
+
+    ######## 41 largest contigs which represent 91% of our genome ########
+
+        contigs = ['scaffold_101:1.0-17057981.0_pilon', 'scaffold_106:1.0-15598540.0_pilon', 'contig_127:1.0-14919945.0_pilon', 'contig_22:4.0-14575672.0_pilon', \
+                   'contig_16:1.0-13974425.0_pilon', 'contig_118:1.0-13832250.0_pilon', 'contig_174:1.0-13151330.0_pilon', 'contig_533:1.0-12440543.0_pilon', 'scaffold_67:1.0-12279225.0_pilon', \
+                   'contig_8:1.0-12122666.0_pilon', 'contig_91:1.0-11773260.0_pilon', 'scaffold_38:1.0-11588445.0_pilon', 'contig_90:1.0-11438290.0_pilon', 'contig_93:1.0-11311637.0_pilon', \
+                   'contig_123:1.0-11274211.0_pilon', 'contig_9:1.0-11125835.0_pilon', 'contig_15:1.0-11122009.0_pilon', 'contig_427:384.0-9460825.0_pilon', 'contig_19:1.0-9019598.0_pilon', \
+                   'contig_599:6529.0-8758774.0_pilon', 'contig_143:1.0-8481133.0_pilon', 'contig_2:1.0-8206783.0_pilon', 'contig_28:1.0-8182740.0_pilon', 'scaffold_125:1.0-7722920.0_pilon', \
+                   'scaffold_838:1.0-6380105.0_pilon', 'contig_122:1.0-6309019.0_pilon', 'contig_94:1.0-4884195.0_pilon', 'contig_14:1.0-4861701.0_pilon', 'contig_124:1.0-4492329.0_pilon', \
+                   'scaffold_115:1.0-3763395.0_pilon', 'contig_20:1.0-3597822.0_pilon', 'contig_6:1.0-3057726.0_pilon', 'contig_3:1.0-3047716.0_pilon', 'contig_4:1.0-2449395.0_pilon', \
+                   'contig_153:2264884.0-4640337.0_pilon', 'contig_153:1.0-2262385.0_pilon', 'contig_200:1.0-2164460.0_pilon', 'contig_23:1.0-2122701.0_pilon', 'contig_191:1.0-1908425.0_pilon', \
+                   'scaffold_1001:1.0-1813021.0_pilon', 'contig_142:1.0-1794019.0_pilon']
+
+    contigs_codes_41_contigs = get_genes_for_largest_contigs()
+
+
+
+    res = dict((k,v) for k,v in final_orthologs.items()) ####### dictionary with L. sceleratus and T. nigroviridis genes ({'Lscel_00013489-RA': 'TETNG16956'.....})
+
+
+
+
+    # finalGenes = {}  ## nigro, lscel
+    # for contig, code in contigs_codes_41_contigs:
+    # #     print(contig,code)
+    #     if code in res.keys():
+    #         finalGenes[res[code]] = code
+
+
+    finalGenes = {res[code]:code for contig, code in contigs_codes_41_contigs if code in res.keys()}  ############## inversion of res dictionary 
+            
+    print(len(finalGenes)) 
+
+    print(list(finalGenes.items())[:10])
+            
+    ids_ensembl_nigro = {}
+
+    with open('TETNG.fa') as fasta:
+        
+        for line in fasta:
+
+            line = line.strip()
+
+            if line.startswith('>'):
+
+                line = line.split('|')
+                key = line[0].replace('>', '').replace(" ", "")
+                value = line[1].replace(" ", "")
+                ids_ensembl_nigro[key] = value
+
+        
+        
+    ########################    pairing L. sceleratus genes with T. nigroviridis genes
+
+    final_pairs_lago_ensIDS = {lago:ids_ensembl_nigro[nigro] for nigro, lago in finalGenes.items() if nigro in ids_ensembl_nigro.keys()}
+
+    #################
+    # print(final_pairs_lago_ensIDS)
+
+
+    lago_dict_coords = get_coordinates_orthos()
+
+
+    lago_code_contig={v:k for k,v in contigs_codes_41_contigs}
+
+    print("first part of bands done!")  
+    ####################################
 
 with open('first_part_bands.txt', 'wt') as bands:
     
@@ -181,47 +194,40 @@ with open('first_part_bands.txt', 'wt') as bands:
             #print(f'{lago} {lago_start} {lago_end} {v}\n')
 
 
-print("first part of bands done!")  
-####################################
 
 
 ################# finalizing circos bands, checking of the pairs contain of not uplaced regions which must be discarded
 
 
-with open('first_part_bands.txt') as first_bands, open('final_bands.txt', 'wt') as final_bands:
-   
-    discard = []
-    for line in first_bands:
-        
-        line = line.strip().split()
-        
-        nigro_id = line[-1]
-        
-        if  nigro_id in nigro_dict_coords.keys():
-                  
-            lago = line[0]
-            lago_start = line[1]
-            lago_end = line[2]
+    with open('first_part_bands.txt') as first_bands, open('final_bands.txt', 'wt') as final_bands:
+       
+        discard = []
+        for line in first_bands:
             
-            nigro = '_'.join(('nigro',nigro_dict_coords[nigro_id][0]))
-            nigro_start = nigro_dict_coords[nigro_id][1]
-            nigro_end = nigro_dict_coords[nigro_id][2]
+            line = line.strip().split()
             
-            final_bands.write(f'{lago} {lago_start} {lago_end} {nigro} {nigro_start} {nigro_end}\n')
-
-        else :
+            nigro_id = line[-1]
             
-            discard.append(lago_id) #### all the unplaced chrs
+            if  nigro_id in nigro_dict_coords.keys():
+                      
+                lago = line[0]
+                lago_start = line[1]
+                lago_end = line[2]
+                
+                nigro = '_'.join(('nigro',nigro_dict_coords[nigro_id][0]))
+                nigro_start = nigro_dict_coords[nigro_id][1]
+                nigro_end = nigro_dict_coords[nigro_id][2]
+                
+                final_bands.write(f'{lago} {lago_start} {lago_end} {nigro} {nigro_start} {nigro_end}\n')
 
-print("final part of bands done!")
+            else :
+                
+                discard.append(lago_id) #### all the unplaced chrs
+
+    print("final part of bands done!")
 
 
+if __name__ == '__main__':
+    do_all()
 
 
-
-# print(len(final_pairs_ensIDS_lago))
-# print(list(final_pairs_ensIDS_lago.items())[:10])
-# print(list(lago_dict_coords.items())[:10])
-# print(len(finalGenes))
-# print(list(finalGenes.items())[:10])
-# print(nigro_dict_coords)
